@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"> 
+<head>
+    <title>Portal - Bootstrap 5 Admin Dashboard Template For Developers</title>
+    
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="description" content="Portal - Bootstrap 5 Admin Dashboard Template For Developers">
+    <meta name="author" content="Xiaoying Riley at 3rd Wave Media">    
+    <link rel="shortcut icon" href="favicon.ico"> 
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css">
+    
+    <!-- FontAwesome JS-->
+    <script defer src="assets/plugins/fontawesome/js/all.min.js"></script>
+    
+    <!-- App CSS -->  
+    <link id="theme-style" rel="stylesheet" href="assets/css/portal.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    <style>
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 1000;
+        }
+        .overlay-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            width: 90%;
+            max-width: 800px;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: transparent;
+            border: none;
+            font-size: 20px;
+        }
+        .list-group-item {
+            cursor: pointer;
+        }
+        .blur > *:not(.overlay) {
+            filter: blur(5px);
+            pointer-events: none;
+        }
+        .employee-table-container {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+    </style>
+</head> 
+
+<body class="app">   	
+	<th:block th:include="fragment/header"></th:block>
+    <div class="app-wrapper">
+	    <div class="app-content pt-3 p-md-3 p-lg-4">
+		    <div class="container-xl">			    
+			    <h1 class="app-page-title">New</h1>
+			    <hr class="mb-4">
+                <div class="row g-4 settings-section">
+	                <div class="col-12">
+		                <div class="app-card app-card-settings shadow-sm p-4">
+						    <div class="app-card-body">
+							    <form class="settings-form" id="form" method="POST" th:object="${taskRequest}" th:action="@{create}">
+								    <div class="mb-3">
+									    <label for="task-name" class="form-label">Task Name</label>
+									    <input type="text" class="form-control" id="task-name" value="" required th:field="*{taskName}">
+									</div>
+									<div class="mb-3">
+									    <label for="description" class="form-label">Description</label>
+									    <textarea class="form-control" id="description" style="height: 150px; width: 100%;" required th:field="*{description}"></textarea>
+									</div>
+									<div class="mb-3">
+									    <label for="start-date" class="form-label">Start Day</label>
+									    <input type="text" class="form-control" id="start-date" value="" required th:field="*{createdAt}">
+									</div>
+								    <div class="mb-3">
+									    <label for="end-date" class="form-label">End Day</label>
+									    <input type="text" class="form-control" id="end-date" value="" th:field="*{dueDate}">
+									</div>
+									<div class="mb-3 d-flex align-items-end">
+									<div>
+									    <label for="project" class="form-label">Project</label>
+									    <input type="text" class="form-control" id="project-name" value="" readonly>
+                                          <input type="hidden" id="project-id" th:field="*{projectId}">
+									     </div>
+									     <div class="ms-2">
+							                <button type="button" class="btn btn-primary" id="chooseBtnProject">Choose</button>
+							            </div>
+									</div>
+									<div class="mb-3 d-flex align-items-end">
+									    <div>
+									        <label for="employee" class="form-label">Employee</label>
+									        <input type="text" class="form-control" id="employee-name" value="" readonly>
+                                            <input type="hidden" id="employee-id" th:field="*{assigneeId}">
+									    </div>
+									    <div class="ms-2">
+							                <button type="button" class="btn btn-primary" id="chooseBtn">Choose</button>
+							            </div>
+									</div>
+									<button type="submit" class="btn app-btn-primary">Save Changes</button>
+							    </form>
+						    </div><!--//app-card-body-->
+						</div><!--//app-card-->
+	                </div>
+                </div><!--//row-->
+			    <hr class="my-4">
+		    </div><!--//container-fluid-->
+	    </div><!--//app-content-->
+	 
+    </div><!--//app-wrapper-->    									
+
+	<div id="employeeListFrame" class="overlay">
+        <div class="overlay-content">
+            <button class="close-btn" id="closeBtn">&times;</button>
+            <div class="tab-content" id="orders-table-tab-content">
+                <div class="tab-pane fade show active" id="orders-all" role="tabpanel" aria-labelledby="orders-all-tab">
+                    <div class="app-card app-card-orders-table shadow-sm mb-5">
+                        <div class="app-card-body">
+                            <div class="employee-table-container">
+                                <table class="table app-table-hover mb-0 text-left">
+                                    <thead>
+                                        <tr>
+                                            <th class="cell">ID</th>
+                                            <th class="cell">Full Name</th>
+                                            <th class="cell">Email</th>
+                                            <th class="cell">Username</th>
+                                            <th class="cell"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody th:each="user : ${users}">
+                                        <tr th:if="${user.role} == 'user'">
+                                            <td class="cell" th:text="${user.userId}">#15346</td>
+                                            <td class="cell"><span class="truncate" th:text="${user.fullName}"></span></td>
+                                            <td class="cell" th:text="${user.email}">John Sanders</td>
+                                            <td class="cell" th:text="${user.username}">$259.35</td>
+                                            <td class="cell"><button class="btn-sm app-btn-secondary choose-btn">Choose</button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div><!--//table-responsive-->
+                        </div><!--//app-card-body-->        
+                    </div><!--//app-card-->
+                </div><!--//tab-pane-->
+            </div><!--//tab-content-->
+        </div>
+    </div>
+    <div id="projectListFrame" class="overlay">
+        <div class="overlay-content">
+            <button class="close-btn" id="closeBtnP">&times;</button>
+            <div class="tab-content" id="orders-table-tab-content">
+                <div class="tab-pane fade show active" id="orders-all" role="tabpanel" aria-labelledby="orders-all-tab">
+                    <div class="app-card app-card-orders-table shadow-sm mb-5">
+                        <div class="app-card-body">
+                            <div class="project-table-container">
+                                <table class="table app-table-hover mb-0 text-left">
+                                    <thead>
+                                        <tr>
+                                            <th class="cell">ID</th>
+                                            <th class="cell">Project Name</th>
+                                            <th class="cell">Status</th>
+                                            <th class="cell">End</th>
+                                            <th class="cell"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody th:each="project : ${projects}">
+                                        <tr th:if="${project.status} == 'In process'">
+                                            <td class="cell" th:text="${project.projectId}">#15346</td>
+                                            <td class="cell"><span class="truncate" th:text="${project.projectName}"></span></td>
+                                            <td class="cell" th:text="${project.status}">John Sanders</td>
+                                            <td class="cell" th:text="${project.endDate}">John Sanders</td>
+                                            <td class="cell"><button class="btn-sm app-btn-secondary choose-btnproject">Choose</button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div><!--//table-responsive-->
+                        </div><!--//app-card-body-->        
+                    </div><!--//app-card-->
+                </div><!--//tab-pane-->
+            </div><!--//tab-content-->
+        </div>
+    </div>
+    <th:block th:include="fragment/footer"></th:block>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+    <script>
+    $(function () {
+        $('#chooseBtnProject').click(function() {
+            $('#projectListFrame').show();
+            $('body').addClass('blur');
+        });
+
+        $('#closeBtnP, .overlay').click(function(e) {
+            if (e.target == this) {
+                $('#projectListFrame').hide();
+                $('body').removeClass('blur');
+            }
+        });
+
+        $('.choose-btnproject').click(function() {
+            var selectedEmployeeId = $(this).closest('tr').find('td:nth-child(1)').text();
+            var selectedEmployeeName = $(this).closest('tr').find('td:nth-child(2)').text();
+            $('#project-name').val(selectedEmployeeName);
+            $('#project-id').val(selectedEmployeeId);
+            $('#projectListFrame').hide();
+            $('body').removeClass('blur');
+        });
+
+        // Thêm thanh cuộn dọc nếu số lượng nhân viên lớn hơn 5
+        var employeeCount = $('.app-table-hover tbody tr').length;
+        if (employeeCount > 8) {
+            $('.project-table-container').css('height', '200px'); // Số liệu tùy chỉnh, bạn có thể điều chỉnh theo nhu cầu
+            $('.project-table-container').css('overflow-y', 'auto');
+            $('.project-table-container').css('overflow-x', 'hidden');
+        }
+    });
+    </script>
+    <script src="assets/plugins/popper.min.js"></script>
+    <script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>  
+    
+    Page Specific JS
+    <script src="assets/js/app.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.3.5/dist/sweetalert2.all.min.js"></script>
+    
+</body>
+</html>

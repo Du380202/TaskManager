@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"> 
+<head>
+    <title>Portal - Bootstrap 5 Admin Dashboard Template For Developers</title>
+    
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="description" content="Portal - Bootstrap 5 Admin Dashboard Template For Developers">
+    <meta name="author" content="Xiaoying Riley at 3rd Wave Media">    
+    <link rel="shortcut icon" href="favicon.ico"> 
+    
+    <!-- FontAwesome JS-->
+    <script defer src="assets/plugins/fontawesome/js/all.min.js"></script>
+    
+    <!-- App CSS -->  
+    <link id="theme-style" rel="stylesheet" href="assets/css/portal.css">
+	<style >
+	 .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 1000;
+        }
+        .overlay-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            width: 90%;
+            max-width: 800px;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: transparent;
+            border: none;
+            font-size: 20px;
+        }
+        .list-group-item {
+            cursor: pointer;
+        }
+        .blur > *:not(.overlay) {
+            filter: blur(5px);
+            pointer-events: none;
+        }
+        .employee-table-container {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .input-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+        .input-group input[type="text"] {
+            width: 80%; /* Chiều rộng của input text */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .input-group button {
+            width: 18%; /* Chiều rộng của nút */
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            margin-left: 2%;
+        }
+        .input-group button:hover {
+            background-color: #0056b3;
+        }
+	</style>
+</head> 
+
+<body class="app">   	
+	<th:block th:include="fragment/header"></th:block>
+    <div class="app-wrapper">
+	    
+	    <div class="app-content pt-3 p-md-3 p-lg-4">
+	    <div class="container-xl">			    
+
+                <div class="row g-4 settings-section">
+	                <div class="col-12 col-lg-6">
+		                <div class="app-card app-card-settings shadow-sm">
+		                <div class="app-card-header p-3 border-0">
+						        <h4 class="app-card-title">Information</h4>
+					        </div><!--//app-card-header-->
+						    <div class="app-card-body p-4">
+							   <form class="settings-form" id="form" th:method="GET" th:object="${project}">
+							        <div class="mb-3">
+							            <label for="task-name" class="form-label">Project Name:</label>
+							            <span id="task-name" th:text="*{projectName}" class="form-control-static"></span>
+							        </div>
+							        <div class="mb-3">
+							            <label for="description" class="form-label">Description:</label>
+							            <span id="description" th:text="*{description}" class="form-control-static"></span>
+							        </div>
+							        <div class="mb-3">
+							            <label for="start-date" class="form-label ">Start Day:</label>
+							            <span id="" th:text="*{createdAt}" class="form-control-static createdAt"></span>
+							        </div>
+							        <div class="mb-3">
+							            <label for="end-date" class="form-label">End Day:</label>
+							            <span id="" th:text="*{endDate}" class="form-control-static createdAt"></span>
+							        </div>
+							        <div class="mb-3">
+							            <label for="project" class="form-label"></label>
+							            <span id="project" class="form-control-static"></span>
+							        </div>
+							        <div class="mb-3">
+							            <label for="project" class="form-label"></label>
+							            <span id="project"  class="form-control-static"></span>
+							        </div>
+							        <a class="btn app-btn-primary" th:href="@{/editProject(projectId=${project.projectId})}">Edit Project</a>
+							    </form>
+						    </div><!--//app-card-body-->
+						</div><!--//app-card-->
+	                </div>
+		<div class="col-12 col-lg-6">
+        <div class="app-card app-card-chart h-100 shadow-sm">
+            <div class="app-card-header p-3 border-0">
+                <h4 class="app-card-title">Update Task</h4>
+            </div><!--//app-card-header-->
+            <div class="app-card-body p-4">
+				<form class="settings-form" th:method="post" th:object="${project}" th:action="@{/updateProjectUser}">
+					<div class="mb-3" >
+						<label for="setting-input-1" class="form-label">Description</label>
+						<input type="hidden" class="form-control" id="task-name" th:field="*{projectId}" required >
+						<input type="hidden" class="form-control" id="" th:field="*{description}" required >
+						<textarea class="form-control" id="description" name="description" style="height: 50px;width: 100%;" required ></textarea>
+					<div class="mb-3">
+					    <label for="setting-input-2" class="form-label">Progress</label>
+					    <select class="form-select form-control" id="setting-input-2" th:field="*{tienDo}" name="status">
+					        <option value="0" th:selected="${project.tienDo == 0}">0%</option>
+					        <option value="10" th:selected="${project.tienDo == 10}">10%</option>
+					        <option value="20" th:selected="${project.tienDo == 20}">20%</option>
+					        <option value="30" th:selected="${project.tienDo == 30}">30%</option>
+					        <option value="40" th:selected="${project.tienDo == 40}">40%</option>
+					        <option value="50" th:selected="${project.tienDo == 50}">50%</option>
+					        <option value="60" th:selected="${project.tienDo == 60}">60%</option>
+					        <option value="70" th:selected="${project.tienDo == 70}">70%</option>
+					        <option value="80" th:selected="${project.tienDo == 80}">80%</option>
+					        <option value="90" th:selected="${project.tienDo == 90}">90%</option>
+					        <option value="100" th:selected="${project.tienDo == 100}">100%</option>
+					    </select>
+					</div>
+
+
+					</div>
+					<div class="mb-3">
+						<label for="setting-input-2" class="form-label">Status</label>
+						<select class="form-select form-control" id="setting-input-2" th:field="*{status}" name="status">
+				            <option value="Completed" th:selected="${project.status == 'Completed'}">Completed</option>
+				            <option value="In process" th:selected="${project.status == 'In process'}">In process</option>
+				            <option value="Cancelled" th:selected="${project.status == 'Cancelled'}">Cancelled</option>
+				        </select>
+					</div>
+					<button type="submit" class="btn app-btn-primary" >Update</button>
+				</form>
+			</div><!--//app-card-body-->			    
+        </div><!--//app-card-->
+    </div><!--//col-->
+			    <hr class="my-4">
+		    </div><!--//container-fluid-->
+		    <div class="container-xl">
+			    
+			   <div class="row g-4 settings-section">
+	                <div class="col-12 col-lg-6">
+		                <div class="app-card app-card-settings shadow-sm">
+		                <div class="app-card-header p-3 border-0">
+						        <h4 class="app-card-title">Task</h4>
+					        </div><!--//app-card-header-->
+						    <div class="app-card-body p-4">
+							   <div class="tab-content" id="orders-table-tab-content">
+			        <div class="tab-pane fade show active" id="orders-all" role="tabpanel" aria-labelledby="orders-all-tab">
+					    <div class="app-card app-card-orders-table shadow-sm mb-5">
+						    <div class="app-card-body">
+							    <div class="table-responsive">
+							        <table class="table app-table-hover mb-0 text-left">
+										<thead>
+											<tr>
+												<th class="cell">ID</th>
+												<th class="cell">Name</th>
+												<th class="cell">Status</th>
+												<th class="cell"></th>
+											</tr>
+										</thead>
+										<tbody th:each="task: ${tasks}" >
+											<tr>
+												<td class="cell" th:text="${task.task_id}"></td>
+												<td class="cell" th:text="${task.taskName}"><span class="truncate"></span></td>
+												<td class="cell" th:text="${task.status}"></td>
+												<td class="cell"><a class="btn-sm app-btn-secondary" th:href="@{/detail(taskId=${task.task_id})}">View</a></td>
+											</tr>
+										</tbody>
+									</table>
+						        </div><!--//table-responsive-->
+						       
+						    </div><!--//app-card-body-->		
+						</div><!--//app-card-->
+			        </div><!--//tab-pane-->
+				</div><!--//tab-content-->
+						    </div><!--//app-card-body-->
+						</div><!--//app-card-->
+	                </div>
+		<div class="col-12 col-lg-6">
+        <div class="app-card app-card-chart h-100 shadow-sm">
+            <div class="app-card-header p-3 border-0">
+                <h4 class="app-card-title">Activity</h4>
+            </div><!--//app-card-header-->
+            <div class="app-card-body p-4">
+				<div class="tab-content" id="orders-table-tab-content">
+			        <div class="tab-pane fade show active" id="orders-all" role="tabpanel" aria-labelledby="orders-all-tab">
+					    <div class="app-card app-card-orders-table shadow-sm mb-5">
+						    <div class="app-card-body">
+							    <div class="table-responsive">
+							        <table class="table app-table-hover mb-0 text-left">
+										<thead>
+											<tr>
+												<th class="cell">ID</th>
+												<th class="cell">Action</th>
+												<th class="cell">Status</th>
+												<th class="cell">Update</th>
+											</tr>
+										</thead>
+										<tbody th:each="activity, iter: ${activities}" >
+											<tr>
+												<td class="cell" th:text="${iter.count}"></td>
+												<td class="cell" th:text="${activity.action}"><span class="truncate"></span></td>
+												<td class="cell" th:text="${activity.status}"></td>
+												<td class="cell createdAt" th:text="${activity.timestamp}"></td>
+											</tr>
+										</tbody>
+									</table>
+						        </div><!--//table-responsive-->
+						       
+						    </div><!--//app-card-body-->		
+						</div><!--//app-card-->
+			        </div><!--//tab-pane-->
+				</div><!--//tab-content-->
+			</div><!--//app-card-body-->			    
+        </div><!--//app-card-->
+    </div><!--//col-->
+			    <hr class="my-4">
+		    </div><!--//container-fluid-->
+			    
+			    
+				
+				
+				
+			    
+		    </div><!--//container-fluid-->
+	    </div><!--//app-content-->
+	    
+    </div><!--//app-wrapper-->    									
+ 	<script>
+    // Hàm để chuyển đổi định dạng ngày
+	    function formatDate(dateString) {
+	        const date = new Date(dateString);
+	        const options = { day: '2-digit', month: 'short', year: 'numeric' }; // Định dạng ngày 'dd MMM yyyy'
+	        return date.toLocaleDateString('en-GB', options);
+	    }
+	
+	    // Lấy tất cả các phần tử có class 'createdAt' và 'dueDate'
+	    const createdAtElements = document.querySelectorAll('.createdAt');
+	    const dueDateElements = document.querySelectorAll('.dueDate');
+	
+	    // Chuyển đổi định dạng ngày cho các phần tử 'createdAt'
+	    createdAtElements.forEach(el => {
+	        el.textContent = formatDate(el.textContent);
+	    });
+	
+	    // Chuyển đổi định dạng ngày cho các phần tử 'dueDate'
+	    dueDateElements.forEach(el => {
+	        el.textContent = formatDate(el.textContent);
+	    });
+	    
+	</script>
+    <th:block th:include="fragment/footer"></th:block>
+
+</body>
+</html> 
+

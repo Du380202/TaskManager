@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"> 
+<head>
+    <title>Portal - Bootstrap 5 Admin Dashboard Template For Developers</title>
+    
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="description" content="Portal - Bootstrap 5 Admin Dashboard Template For Developers">
+    <meta name="author" content="Xiaoying Riley at 3rd Wave Media">    
+    <link rel="shortcut icon" href="favicon.ico"> 
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css">
+    
+    <!-- FontAwesome JS-->
+    <script defer src="assets/plugins/fontawesome/js/all.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.3.5/dist/sweetalert2.min.css">
+    
+    <!-- App CSS -->  
+    <link id="theme-style" rel="stylesheet" href="assets/css/portal.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    <style>
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+        }
+        .overlay-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .list-group-item {
+            cursor: pointer;
+        }
+        .blur > *:not(.overlay) {
+            filter: blur(5px);
+            pointer-events: none;
+        }
+    </style>
+</head> 
+
+<body class="app">   	
+    <th:block th:include="fragment/header"></th:block>
+    <div class="app-wrapper">
+        <div class="app-content pt-3 p-md-3 p-lg-4">
+            <div class="container-xl">			    
+                <h1 class="app-page-title">New</h1>
+                <hr class="mb-4">
+                <div class="row g-4 settings-section">
+                    <div class="col-12">
+                        <div class="app-card app-card-settings shadow-sm p-4">
+                            <div class="app-card-body">
+                                <form class="settings-form" id="form" method="POST" th:object="${newProject}" th:action="@{addProject}">
+                                    <div class="mb-3">
+                                        <label for="task-name" class="form-label">Project Name</label>
+                                        <input type="text" class="form-control" id="task-name" value="" required th:field="*{projectName}">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="description" class="form-label">Description</label>
+                                        <textarea class="form-control" id="description" style="height: 150px; width: 100%;" required th:field="*{description}"></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="start-date" class="form-label">Start Day</label>
+                                        <input type="text" class="form-control" id="start-date" value="" required th:field="*{createdAt}">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="end-date" class="form-label">End Day</label>
+                                        <input type="text" class="form-control" id="end-date" value="" th:field="*{endDate}">
+                                    </div>
+                                    
+                                    <button type="submit" class="btn app-btn-primary">Save Changes</button>
+                                </form>
+                            </div><!--//app-card-body-->
+                        </div><!--//app-card-->
+                    </div>
+                </div><!--//row-->
+                <hr class="my-4">
+            </div><!--//container-fluid-->
+        </div><!--//app-content-->
+    </div><!--//app-wrapper-->                                    
+
+    
+	
+    
+    <th:block th:include="fragment/footer"></th:block>
+</body>
+</html>

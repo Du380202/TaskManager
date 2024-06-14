@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"> 
+<head>
+    <title>Portal - Bootstrap 5 Admin Dashboard Template For Developers</title>
+    
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="description" content="Portal - Bootstrap 5 Admin Dashboard Template For Developers">
+    <meta name="author" content="Xiaoying Riley at 3rd Wave Media">    
+    <link rel="shortcut icon" href="favicon.ico"> 
+    
+    <!-- FontAwesome JS-->
+    <script defer src="assets/plugins/fontawesome/js/all.min.js"></script>
+    
+    <!-- App CSS -->  
+    <link id="theme-style" rel="stylesheet" href="assets/css/portal.css">
+	<style >
+	 .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 1000;
+        }
+        .overlay-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            width: 90%;
+            max-width: 800px;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: transparent;
+            border: none;
+            font-size: 20px;
+        }
+        .list-group-item {
+            cursor: pointer;
+        }
+        .blur > *:not(.overlay) {
+            filter: blur(5px);
+            pointer-events: none;
+        }
+        .employee-table-container {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+	</style>
+</head> 
+
+<body class="app">   	
+	<th:block th:include="fragment/header"></th:block>
+    <div class="app-wrapper">
+	    
+	    <div class="app-content pt-3 p-md-3 p-lg-4">
+	    <div class="container-xl">			    
+			    <h1 class="app-page-title">New</h1>
+			    <hr class="mb-4">
+                <div class="row g-4 settings-section">
+	                <div class="col-12">
+		                <div class="app-card app-card-settings shadow-sm p-4">
+						    <div class="app-card-body">
+							    <form class="settings-form" id="form" th:method="put" th:object="${task}" th:action="@{update}">
+								    <div class="mb-3">
+									    <label for="task-name" class="form-label">Task Name</label>
+									    <input type="hidden" class="form-control" id="task-name" th:field="*{taskId}" required >
+									    <input type="text" class="form-control" id="task-name" th:field="*{taskName}" required >
+									</div>
+									<div class="mb-3">
+									    <label for="description" class="form-label">Description</label>
+									    <textarea class="form-control" id="description" th:field="*{description}"  style="height: 150px; width: 100%;" required ></textarea>
+									</div>
+									<div class="mb-3">
+									    <label for="start-date" class="form-label">Start Day</label>
+									    <input type="text" class="form-control" th:field="*{updatedAt}" id="start-date" required >
+									</div>
+								    <div class="mb-3">
+									    <label for="end-date" class="form-label">End Day</label>
+									    <input type="text" class="form-control" th:field="*{dueDate}" id="end-date" value="" >
+									</div>
+									
+									<div class="mb-3">
+									    <label for="end-date" class="form-label">Status</label>
+									    <select class="form-select form-control" id="setting-input-2" th:field="*{status}" name="status">
+								            <option value="Completed" th:selected="${task.status == 'Completed'}">Completed</option>
+								            <option value="In process" th:selected="${task.status == 'In process'}">In process</option>
+								            <option value="In process" th:selected="${task.status == 'Cancel'}">Cancel</option>
+								        </select>
+									</div>
+									
+									<div class="mb-3">
+									    <label for="project" class="form-label">Project</label>
+									    <input type="text" class="form-control"  th:field="*{projectId}" id="project" value="" required >
+									</div>
+									<div class="mb-3 d-flex align-items-end">
+									    <div>
+									        <label for="employee" class="form-label">Employee</label>
+									        <input type="text" class="form-control" id="employee-name" value="" readonly>
+                                            <input type="hidden" id="employee-id" th:field="*{assigneeId}">
+									    </div>
+									    <div class="ms-2">
+							                <button type="button" class="btn btn-primary" id="chooseBtn">Choose</button>
+							            </div>
+									</div>
+									<button type="submit" class="btn app-btn-primary">Update</button>
+							    </form>
+						    </div><!--//app-card-body-->
+						</div><!--//app-card-->
+	                </div>
+                </div><!--//row-->
+			    <hr class="my-4">
+		    </div><!--//container-fluid-->
+	    </div><!--//app-content-->
+	    
+    </div><!--//app-wrapper-->    									
+	<div id="employeeListFrame" class="overlay">
+        <div class="overlay-content">
+            <button class="close-btn" id="closeBtn">&times;</button>
+            <div class="tab-content" id="orders-table-tab-content">
+                <div class="tab-pane fade show active" id="orders-all" role="tabpanel" aria-labelledby="orders-all-tab">
+                    <div class="app-card app-card-orders-table shadow-sm mb-5">
+                        <div class="app-card-body">
+                            <div class="employee-table-container">
+                                <table class="table app-table-hover mb-0 text-left">
+                                    <thead>
+                                        <tr>
+                                            <th class="cell">ID</th>
+                                            <th class="cell">Full Name</th>
+                                            <th class="cell">Email</th>
+                                            <th class="cell">Username</th>
+                                            <th class="cell"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody th:each="user : ${users}">
+                                        <tr>
+                                            <td class="cell" th:text="${user.userId}">#15346</td>
+                                            <td class="cell"><span class="truncate" th:text="${user.fullName}"></span></td>
+                                            <td class="cell" th:text="${user.email}">John Sanders</td>
+                                            <td class="cell" th:text="${user.username}">$259.35</td>
+                                            <td class="cell"><button class="btn-sm app-btn-secondary choose-btn">Choose</button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div><!--//table-responsive-->
+                        </div><!--//app-card-body-->        
+                    </div><!--//app-card-->
+                </div><!--//tab-pane-->
+            </div><!--//tab-content-->
+        </div>
+    </div>
+ 
+    <th:block th:include="fragment/footer"></th:block>
+
+</body>
+</html> 
+

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"> 
+<head>
+    <title>Portal - Bootstrap 5 Admin Dashboard Template For Developers</title>
+    
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="description" content="Portal - Bootstrap 5 Admin Dashboard Template For Developers">
+    <meta name="author" content="Xiaoying Riley at 3rd Wave Media">    
+    <link rel="shortcut icon" href="favicon.ico"> 
+    
+    <!-- FontAwesome JS-->
+    <script defer src="assets/plugins/fontawesome/js/all.min.js"></script>
+    
+    <!-- App CSS -->  
+    <link id="theme-style" rel="stylesheet" href="assets/css/portal.css">
+
+</head> 
+
+<body class="app">   	
+	<th:block th:include="fragment/header"></th:block>
+    <div class="app-wrapper">
+	    
+	    <div class="app-content pt-3 p-md-3 p-lg-4">
+		    <div class="container-xl">
+			    
+			    <div class="row g-3 mb-4 align-items-center justify-content-between">
+				    <div class="col-auto">
+			            <h1 class="app-page-title mb-0">Task</h1>
+				    </div>
+				    <div class="col-auto">
+					     <div class="page-utilities">
+						    <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
+							    <div class="col-auto">
+								    <form class="table-search-form row gx-1 align-items-center">
+					                    <div class="col-auto">
+					                        <input type="text" id="search-orders" name="keyword" th:value="${key}" class="form-control search-orders" placeholder="Search">
+					                    </div>
+					                    <div class="col-auto">
+					                        <button type="submit" class="btn app-btn-secondary">Search</button>
+					                    </div>
+					                </form>
+					                
+							    </div><!--//col-->
+							    <div class="col-auto">
+					     <div class="page-utilities">
+						    <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
+							    <div class="col-auto">						    
+								    <a class="btn app-btn-secondary" style="background-color: #15a362; color: white;" href="assignment">
+									    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-plus" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" stroke="currentColor" stroke-width="2"/>
+</svg>
+									New Task
+									</a>
+							    </div>
+						    </div><!--//row-->
+					    </div><!--//table-utilities-->
+				    </div><!--//col-auto-->
+						    </div><!--//row-->
+					    </div><!--//table-utilities-->
+				    </div><!--//col-auto-->
+			    </div><!--//row-->
+			   
+			    
+			    <nav id="orders-table-tab" class="orders-table-tab app-nav-tabs nav shadow-sm flex-column flex-sm-row mb-4">
+				    <a class="flex-sm-fill text-sm-center nav-link active" id="orders-all-tab" data-bs-toggle="tab" href="#orders-all" role="tab" aria-controls="orders-all" aria-selected="true">All</a>
+				    <a class="flex-sm-fill text-sm-center nav-link"  id="orders-paid-tab" data-bs-toggle="tab" href="#orders-paid" role="tab" aria-controls="orders-paid" aria-selected="false">Paid</a>
+				    <a class="flex-sm-fill text-sm-center nav-link" id="orders-pending-tab" data-bs-toggle="tab" href="#orders-pending" role="tab" aria-controls="orders-pending" aria-selected="false">Pending</a>
+				    <a class="flex-sm-fill text-sm-center nav-link" id="orders-cancelled-tab" data-bs-toggle="tab" href="#orders-cancelled" role="tab" aria-controls="orders-cancelled" aria-selected="false">Cancelled</a>
+				</nav>
+				
+				
+				<div class="tab-content" id="orders-table-tab-content">
+			        <div class="tab-pane fade show active" id="orders-all" role="tabpanel" aria-labelledby="orders-all-tab">
+					    <div class="app-card app-card-orders-table shadow-sm mb-5">
+						    <div class="app-card-body">
+							    <div class="table-responsive">
+							        <table class="table app-table-hover mb-0 text-left">
+										<thead>
+											<tr>
+												<th class="cell">STT</th>
+												<th class="cell">Task</th>
+												<th class="cell">Employee</th>
+												<th class="cell">Assign</th>
+												<th class="cell">Status</th>
+												<th class="cell">Complete</th>
+												<th class="cell"></th>
+											</tr>
+										</thead>
+										<tbody th:each="task : ${tasks}">
+											<tr>
+												<td class="cell" th:text="${task.task_id}"></td>
+												<td class="cell" th:text="${task.taskName}"><span class="truncate"></span></td>
+												<td class="cell" th:text="${task.full_name}"></td>
+												<td class="cell" th:text="${task.created_at}"><span></span><span class="note"></span></td>
+<!--  -->										<td class="cell" th:if="${task.status} == 'Completed'">
+													<span class="badge bg-success" th:text="${task.status}"></span>
+												</td>
+												<td class="cell" th:if="${task.status} == 'In process'">
+													<span class="badge bg-warning" th:text="${task.status}"></span>
+												</td>
+												<td class="cell" th:if="${task.status} == 'Cancelled'">
+													<span class="badge bg-danger" th:text="${task.status}"></span>
+												</td>
+												<td class="cell" th:text="${task.dueDate}"></td>
+												<td class="cell">
+										            <a class="btn-sm app-btn-secondary" th:href="@{/detail(taskId=${task.task_id})}">View</a>
+										            
+										        </td>
+											</tr>
+										</tbody>
+									</table>
+						        </div><!--//table-responsive-->
+						       
+						    </div><!--//app-card-body-->		
+						</div><!--//app-card-->
+						<nav class="app-pagination">
+							<ul class="pagination justify-content-center">
+								<li class="page-item disabled">
+									<a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+							    </li>
+								<li class="page-item active"><a class="page-link" href="#">1</a></li>
+								<li class="page-item disabled">
+								    <a class="page-link" href="#">Next</a>
+								</li>
+							</ul>
+						</nav><!--//app-pagination-->
+						
+			        </div><!--//tab-pane-->
+			        
+			        <div class="tab-pane fade" id="orders-paid" role="tabpanel" aria-labelledby="orders-paid-tab">
+					    <div class="app-card app-card-orders-table mb-5">
+						    <div class="app-card-body">
+							    <div class="table-responsive">
+								    
+							        <table class="table mb-0 text-left">
+										<thead>
+											<tr>
+												<th class="cell">STT</th>
+												<th class="cell">Task</th>
+												<th class="cell">Employee</th>
+												<th class="cell">Assign</th>
+												<th class="cell">Status</th>
+												<th class="cell">Complete</th>
+												<th class="cell"></th>
+											</tr>
+										</thead>
+										<tbody th:each="task, iter  : ${tasks}">
+											<tr th:if="${task.status} == 'Completed'">
+												<td class="cell" th:text="${iter.count}"></td>
+												<td class="cell" th:text="${task.taskName}"><span class="truncate"></span></td>
+												<td class="cell" th:text="${task.full_name}"></td>
+												<td class="cell" th:text="${task.created_at}"><span></span><span class="note"></span></td>
+												<td class="cell dueDate" th:text="${task.dueDate}"></td>
+												<td class="cell" ><span class="badge bg-success" th:text="${task.status}"></span></td>
+												
+												<td class="cell">
+										            <a class="btn-sm app-btn-secondary" th:href="@{/detailTask(taskId=${task.task_id})}">View</a>
+										            
+										        </td>
+											</tr>
+										</tbody>
+									</table>
+						        </div><!--//table-responsive-->
+						    </div><!--//app-card-body-->		
+						</div><!--//app-card-->
+			        </div><!--//tab-pane-->
+			        
+			        <div class="tab-pane fade" id="orders-pending" role="tabpanel" aria-labelledby="orders-pending-tab">
+					    <div class="app-card app-card-orders-table mb-5">
+						    <div class="app-card-body">
+							    <div class="table-responsive">
+							        <table class="table mb-0 text-left">
+										<thead>
+											<tr>
+												<th class="cell">STT</th>
+												<th class="cell">Task</th>
+												<th class="cell">Employee</th>
+												<th class="cell">Assign</th>
+												<th class="cell">Status</th>
+												<th class="cell">Complete</th>
+												<th class="cell"></th>
+											</tr>
+										</thead>
+										<tbody th:each="task, iter  : ${tasks}">
+											<tr th:if="${task.status} == 'In process'">
+												<td class="cell" th:text="${iter.count}"></td>
+												<td class="cell" th:text="${task.taskName}"><span class="truncate"></span></td>
+												<td class="cell" th:text="${task.full_name}"></td>
+												<td class="cell" th:text="${task.created_at}"><span></span><span class="note"></span></td>
+												<!-- <td class="cell" th:text="${task.tienDo}"><span class="badge bg-success"></span></td> -->
+<!-- 												<td class="cell" th:if="${task.status}"><span class="badge bg-success">Completed</span></td>
+<!--  -->										<td class="cell" ><span class="badge bg-warning" th:text="${task.status}"></span></td>
+												<td class="cell" th:text="${task.dueDate}"></td>
+												<td class="cell">
+										            <a class="btn-sm app-btn-secondary" th:href="@{/detail(taskId=${task.task_id})}">View</a>
+										            
+										        </td>
+											</tr>
+										</tbody>
+									</table>
+						        </div><!--//table-responsive-->
+						    </div><!--//app-card-body-->		
+						</div><!--//app-card-->
+			        </div><!--//tab-pane-->
+			        <div class="tab-pane fade" id="orders-cancelled" role="tabpanel" aria-labelledby="orders-cancelled-tab">
+					    <div class="app-card app-card-orders-table mb-5">
+						    <div class="app-card-body">
+							    <div class="table-responsive">
+							        <table class="table mb-0 text-left">
+										<thead>
+											<tr>
+												<th class="cell">Order</th>
+												<th class="cell">Product</th>
+												<th class="cell">Customer</th>
+												<th class="cell">Date</th>
+												<th class="cell">Status</th>
+												<th class="cell">Total</th>
+												<th class="cell"></th>
+											</tr>
+										</thead>
+										<tbody th:each="task, iter  : ${tasks}">
+											<tr th:if="${task.status} == 'Cancelled'">
+												<td class="cell" th:text="${iter.count}"></td>
+												<td class="cell" th:text="${task.taskName}"><span class="truncate"></span></td>
+												<td class="cell" th:text="${task.full_name}"></td>
+												<td class="cell" th:text="${task.created_at}"><span></span><span class="note"></span></td>
+												<!-- <td class="cell" th:text="${task.tienDo}"><span class="badge bg-success"></span></td> -->
+<!-- 												<td class="cell" th:if="${task.status}"><span class="badge bg-success">Completed</span></td>
+<!--  -->										<td class="cell" ><span class="badge bg-danger" th:text="${task.status}"></span></td>
+												<td class="cell" th:text="${task.dueDate}"></td>
+												<td class="cell">
+										            <a class="btn-sm app-btn-secondary" th:href="@{/detail(taskId=${task.task_id})}">View</a>
+										            
+										        </td>
+											</tr>
+										</tbody>
+									</table>
+						        </div><!--//table-responsive-->
+						    </div><!--//app-card-body-->		
+						</div><!--//app-card-->
+			        </div><!--//tab-pane-->
+				</div><!--//tab-content-->
+				
+				
+			    
+		    </div><!--//container-fluid-->
+	    </div><!--//app-content-->
+	    
+    </div><!--//app-wrapper-->    									
+
+ 
+   <th:block th:include="fragment/footer"></th:block>	
+
+</body>
+</html> 
+

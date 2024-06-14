@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: sqlserver
+    environment:
+      SA_PASSWORD: "dutran3802"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1434:1434"
+    volumes:
+      - ./project.sql:/project.sql
+    command: /bin/bash -c "chmod +x /project.sql && /opt/mssql/bin/sqlservr & sleep 30s && /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P dutran3802 -i /project.sql"
+
+  springboot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: springboot 
+    depends_on:
+      - sqlserver
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:sqlserver://sqlserver:1434;databaseName=ProjectService
+      SPRING_DATASOURCE_USERNAME: sa
+      SPRING_DATASOURCE_PASSWORD: dutran3802

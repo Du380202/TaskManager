@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"> 
+<head>
+    <title>Portal - Bootstrap 5 Admin Dashboard Template For Developers</title>
+    
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="description" content="Portal - Bootstrap 5 Admin Dashboard Template For Developers">
+    <meta name="author" content="Xiaoying Riley at 3rd Wave Media">    
+    <link rel="shortcut icon" href="favicon.ico"> 
+    
+    <!-- FontAwesome JS-->
+    <script defer src="assets/plugins/fontawesome/js/all.min.js"></script>
+    
+    <!-- App CSS -->  
+    <link id="theme-style" rel="stylesheet" href="assets/css/portal.css">
+	<style >
+	 .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 1000;
+        }
+        .overlay-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            width: 90%;
+            max-width: 800px;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: transparent;
+            border: none;
+            font-size: 20px;
+        }
+        .list-group-item {
+            cursor: pointer;
+        }
+        .blur > *:not(.overlay) {
+            filter: blur(5px);
+            pointer-events: none;
+        }
+        .employee-table-container {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .input-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+        .input-group input[type="text"] {
+            width: 80%; /* Chiều rộng của input text */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .input-group button {
+            width: 18%; /* Chiều rộng của nút */
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            margin-left: 2%;
+        }
+        .input-group button:hover {
+            background-color: #0056b3;
+        }
+	</style>
+</head> 
+
+<body class="app">   	
+	<th:block th:include="fragment/header"></th:block>
+    <div class="app-wrapper">
+	    
+	    <div class="app-content pt-3 p-md-3 p-lg-4">
+	    <div class="container-xl">			    
+
+                <div class="row g-4 settings-section">
+	                <div class="col-12 col-lg-6">
+		                <div class="app-card app-card-settings shadow-sm">
+		                <div class="app-card-header p-3 border-0">
+						        <h4 class="app-card-title">Information</h4>
+					        </div><!--//app-card-header-->
+						    <div class="app-card-body p-4">
+							   <form class="settings-form" id="form" th:method="GET" th:object="${task}">
+							        <div class="mb-3">
+							            <label for="task-name" class="form-label">Task Name:</label>
+							            <span id="task-name" th:text="*{taskName}" class="form-control-static"></span>
+							        </div>
+							        <div class="mb-3">
+							            <label for="description" class="form-label">Description:</label>
+							            <span id="description" th:text="*{description}" class="form-control-static"></span>
+							        </div>
+							        <div class="mb-3">
+							            <label for="start-date" class="form-label ">Start Day:</label>
+							            <span id="" th:text="*{updatedAt}" class="form-control-static createdAt"></span>
+							        </div>
+							        <div class="mb-3">
+							            <label for="end-date" class="form-label">End Day:</label>
+							            <span id="" th:text="*{dueDate}" class="form-control-static createdAt"></span>
+							        </div>
+							        <div class="mb-3">
+							            <label for="project" class="form-label">Project:</label>
+							            <span id="project" th:text="*{projectId}" class="form-control-static"></span>
+							        </div>
+							        <a class="btn app-btn-primary" th:href="@{/edit(taskId=${task.taskId})}">Edit Task</a>
+							    </form>
+						    </div><!--//app-card-body-->
+						</div><!--//app-card-->
+	                </div>
+		<div class="col-12 col-lg-6">
+        <div class="app-card app-card-chart h-100 shadow-sm">
+            <div class="app-card-header p-3 border-0">
+                <h4 class="app-card-title">Update Task</h4>
+            </div><!--//app-card-header-->
+            <div class="app-card-body p-4">
+				<form class="settings-form" th:method="post" th:object="${task}" th:action="@{/updateTaskUser}">
+					<div class="mb-3" >
+						<label for="setting-input-1" class="form-label">Description</label>
+						<input type="hidden" class="form-control" id="task-name" th:field="*{taskId}" required >
+						<input type="hidden" class="form-control" id="description" th:field="*{description}" required >
+						<textarea class="form-control" id="descrip" name="descrip" style="height: 100px; width: 100%;" required ></textarea>
+
+
+					</div>
+					<div class="mb-3">
+					    <label for="setting-input-2" class="form-label">Status</label>
+					    <select class="form-select form-control" id="setting-input-2" th:field="*{status}" name="status" onchange="checkStatus()">
+					        <option value="Completed" th:selected="${task.status == 'Completed'}">Completed</option>
+					        <option value="In process" th:selected="${task.status == 'In process'}">In process</option>
+					        <option value="Cancelled" th:selected="${task.status == 'Cancelled'}">Cancelled</option>
+					    </select>
+					</div>
+					<button type="submit" class="btn app-btn-primary" >Update</button>
+
+				</form>
+			</div><!--//app-card-body-->			    
+        </div><!--//app-card-->
+    </div><!--//col-->
+			    <hr class="my-4">
+		    </div><!--//container-fluid-->
+		    <div class="container-xl">
+			    
+			    <div class="row g-3 mb-4 align-items-center justify-content-between">
+				    <div class="col-auto">
+			            <h1 class="app-page-title mb-0">Task Detail</h1>
+				    </div>
+				    <div class="col-auto">
+					     <div class="page-utilities">
+						    <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
+							    <div class="col-auto">
+								    
+					                
+							    </div><!--//col-->
+							    <div class="col-auto">
+					   
+				    </div><!--//col-auto-->
+						    </div><!--//row-->
+					    </div><!--//table-utilities-->
+				    </div><!--//col-auto-->
+			    </div><!--//row-->
+			    
+			    
+				<div class="tab-content" id="orders-table-tab-content">
+			        <div class="tab-pane fade show active" id="orders-all" role="tabpanel" aria-labelledby="orders-all-tab">
+					    <div class="app-card app-card-orders-table shadow-sm mb-5">
+						    <div class="app-card-body">
+							    <div class="table-responsive">
+							        <table class="table app-table-hover mb-0 text-left">
+										<thead>
+											<tr>
+												<th class="cell">ID</th>
+												<th class="cell">Action</th>
+												<th class="cell">Status</th>
+												<th class="cell">Update</th>
+											</tr>
+										</thead>
+										<tbody th:each="activity: ${activities}" >
+											<tr>
+												<td class="cell" th:text="${activity.logId}"></td>
+												<td class="cell" th:text="${activity.action}"><span class="truncate"></span></td>
+												<td class="cell" th:text="${activity.status}"></td>
+												<td class="cell createdAt" th:text="${activity.timestamp}"></td>
+											</tr>
+										</tbody>
+									</table>
+						        </div><!--//table-responsive-->
+						       
+						    </div><!--//app-card-body-->		
+						</div><!--//app-card-->
+			        </div><!--//tab-pane-->
+				</div><!--//tab-content-->
+				
+				
+			    
+		    </div><!--//container-fluid-->
+	    </div><!--//app-content-->
+	    
+    </div><!--//app-wrapper-->    									
+ 	<script>
+    // Hàm để chuyển đổi định dạng ngày
+	    function formatDate(dateString) {
+	        const date = new Date(dateString);
+	        const options = { day: '2-digit', month: 'short', year: 'numeric' }; // Định dạng ngày 'dd MMM yyyy'
+	        return date.toLocaleDateString('en-GB', options);
+	    }
+	
+	    // Lấy tất cả các phần tử có class 'createdAt' và 'dueDate'
+	    const createdAtElements = document.querySelectorAll('.createdAt');
+	    const dueDateElements = document.querySelectorAll('.dueDate');
+	
+	    // Chuyển đổi định dạng ngày cho các phần tử 'createdAt'
+	    createdAtElements.forEach(el => {
+	        el.textContent = formatDate(el.textContent);
+	    });
+	
+	    // Chuyển đổi định dạng ngày cho các phần tử 'dueDate'
+	    dueDateElements.forEach(el => {
+	        el.textContent = formatDate(el.textContent);
+	    });
+	    
+	</script>
+	
+    <th:block th:include="fragment/footer"></th:block>
+
+</body>
+</html> 
+
